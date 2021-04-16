@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from . import forms
-from django import forms
+from django.http import HttpResponse
 
 from . import modelforms
 from . import  models
@@ -99,6 +99,42 @@ def request_book(request):
         'form':form,
     }
     return render(request,'secondapp/Borrow.html',dict)
+
+
+def login(request):
+    form=forms.FormName()
+    dict = {
+        'form': form
+    }
+    if request.method=='POST':
+        form = forms.FormName(request.POST)
+        if form.is_valid()==True:
+            dict = {
+                'form': form
+            }
+            name=form.cleaned_data['name']
+            print('afa')
+            return mybooks(request,name)
+        print('fdaff')
+
+    return render(request, 'secondapp/login.html',dict)
+
+def mybooks(request,name):
+    namelist = models.User.objects.all()
+    print(namelist)
+    for user in namelist:
+
+        if user.name==name:
+            book_list=models.Mybooks.objects.filter(name=name)
+            if(len(book_list)==0):
+                return HttpResponse('NO PENDING BOOKS ')
+            else:
+                dict={
+                    'mybooks':book_list,
+                }
+                return render(request,'secondapp/mybooks.html',dict)
+
+    return HttpResponse('FIRST REGISTER YOURSELF')
 # def form_name_view(request):
 #     form=forms.FormName()
 # #to check that somebody has actually posted /submittedsomething

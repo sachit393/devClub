@@ -13,5 +13,7 @@ urlpatterns=[
     path('books/acads/', views.acads_books_view,name='acadsbooks'),
     path('registration/',views.registrationform,name='registrationform'),
     path('book/<str:booktitle>',views.book,name='book'),
-    path('book/request/',views.request_book,name='Borrow')
+    path('book/request/',views.request_book,name='Borrow'),
+    path('login/',views.login,name='login'),
+    path('mybooks<str:name>',views.mybooks,name='mybooks')
 ]

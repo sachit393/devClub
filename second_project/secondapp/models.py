@@ -16,3 +16,8 @@ class Request(models.Model):
     book=models.ForeignKey(Book,on_delete=models.CASCADE)
     name=models.CharField(max_length=264)
     email_id=models.CharField(max_length=264)
+
+class Mybooks(models.Model):
+    name=models.CharField(max_length=264)
+    book=models.CharField(max_length=264)
+    due=models.CharField(max_length=264)
