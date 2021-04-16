@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+</head>
+<body>
+    <div class="container">
+        <h1>HERE IS THE LIST OF AVAILIBLE BOOKS</h1>
+        {% if books %}
+        <ol>
+            {% for book in books %}
+            <li>Title: {{book.title}}
+                Link: <a href="{% url 'secondapp:book' book.title %}?">Check out the book</a>
+                Author: {{book.author}}
+
+                <h2>{{book.genre}}</h2>
+            </li>
+            <br>
+            {% endfor %}
+        </ol>
+        <a href="{% url 'secondapp:index' %}">Homepage</a>
+        {% endif %}
+    </div>
+
+
+
+</body>
+</html>

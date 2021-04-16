@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron">
+   <h1>These are the various books categorised on the basis of their Genre</h1>
+
+    </div>
+    <ul>
+        <li>
+            ACTION:<a href="{% url 'secondapp:actionbooks'  %}">Check out the book</a>
+        </li>
+        <li>
+            FICTION:<a href="{% url 'secondapp:fictionbooks'  %}">Check out the book</a>
+        </li>
+        <li>
+            DRAMA:<a href="{% url 'secondapp:dramabooks'  %}">Check out the book</a>
+        </li>
+        <li>
+            MOTIVATION:<a href="{% url 'secondapp:motivationbooks'  %}">Check out the book</a>
+        </li>
+        <li>
+            ACADS:<a href="{% url 'secondapp:acadsbooks'  %}">Check out the book</a>
+        </li>
+
+    </ul>
+</div>
+<a href="{% url 'secondapp:registrationform'%}">
+<input type="submit" value="REGISTER">
+</a>
+</body>
+</html>

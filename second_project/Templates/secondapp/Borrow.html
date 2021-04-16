@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BorrowRequest</title>
+</head>
+<body>
+<form method="POST">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <input type="submit" value="SUBMIT">
+
+</form>
+<h1>NOTE:WILL NOT BE SUBMITTED UNLESS YOU ARE REGISTERED</h1>
+</body>
+</html>
