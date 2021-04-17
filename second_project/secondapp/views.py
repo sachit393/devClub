@@ -32,6 +32,7 @@ def action_books_view(request):
     books1 = models.Book.objects.filter(genre='action')
     dict1={
         'books':books1,
+        'genre':'Action'
 
     }
     return render(request,'secondapp/books.html',context=dict1)
@@ -40,6 +41,7 @@ def fiction_books_view(request):
     books2 = models.Book.objects.filter(genre='fiction')
     dict2={
         'books':books2,
+        'genre': 'Fiction'
     }
     return render(request,'secondapp/books.html',context=dict2)
 
@@ -47,6 +49,7 @@ def drama_books_view(request):
     books3 = models.Book.objects.filter(genre='drama')
     dict3={
         'books':books3,
+        'genre':'Drama'
     }
     return render(request,'secondapp/books.html',context=dict3)
 
@@ -54,6 +57,7 @@ def motivation_books_view(request):
     books4 = models.Book.objects.filter(genre='motivation')
     dict4={
         'books':books4,
+        'genre':'Motivation'
     }
     return render(request,'secondapp/books.html',context=dict4)
 
@@ -61,6 +65,7 @@ def acads_books_view(request):
     books5 = models.Book.objects.filter(genre='acads')
     dict5={
         'books':books5,
+        'genre':'Academic'
     }
     return render(request,'secondapp/books.html',context=dict5)
 
@@ -92,7 +97,7 @@ def request_book(request):
                             form.save(commit=True)
                             #do something after receiving data
                             # print("validation success")
-                            return index(request)
+                            return after_request(request,'book')
 
 
 
@@ -128,16 +133,23 @@ def mybooks(request,name):
 
         if user.name==name:
             accepted_list=models.Request.objects.filter(name=name,accept=True)
-            if len(accepted_list)!=0:
+            accepted_renew_list=models.RenewalRequests.objects.filter(name=name,accept=True)
+            if len(accepted_list)!=0 or len(accepted_renew_list):
                 for book in accepted_list:
                     mybook=models.Mybooks.objects.get_or_create(name=book.name,book=book.book,due=book.due)
                 book_list = models.Mybooks.objects.filter(name=name)
                 models.Request.objects.filter(name=name,accept=True).delete()
-
-            if (len(accepted_list)==0):
+                for book in accepted_renew_list:
+                    mybook = models.Mybooks.objects.get_or_create(name=book.name, book=book.book, due=book.renewal_time)
+                book_list = models.Mybooks.objects.filter(name=name)
+                models.RenewalRequests.objects.filter(name=name, accept=True).delete()
+            if (len(accepted_list)==0 and len(accepted_renew_list)==0):
                 print('assdf')
-                return HttpResponse('NO ISSUED BOOKS ')
-            else:
+                book_list = models.Mybooks.objects.filter(name=name)
+                if(len(book_list)==0):
+                    return HttpResponse('NO ISSUED BOOKS ')
+
+
                 dict={
                     'mybooks':book_list,
                 }

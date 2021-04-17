@@ -24,6 +24,8 @@ class Request(models.Model):
     email_id=models.CharField(max_length=264)
     accept=models.BooleanField(default=False)
     due=models.CharField(max_length=200,default='10 days')
+    password = models.CharField(max_length=200,default='')
+
     def __str__(self):
         return f'Name:{self.name}, Book:{ self.book}'
 

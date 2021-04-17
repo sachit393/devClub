@@ -10,6 +10,8 @@ class ModelForm(forms.ModelForm):
 class BorrowForm(forms.ModelForm):
     accept=forms.BooleanField(widget=forms.HiddenInput(),required=False)
     due=forms.CharField(widget=forms.HiddenInput(),required=False)
+    password = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
         model=Request
         fields='__all__'
