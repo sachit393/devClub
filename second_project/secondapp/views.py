@@ -127,9 +127,16 @@ def mybooks(request,name):
     for user in namelist:
 
         if user.name==name:
-            book_list=models.Mybooks.objects.filter(name=name)
-            if(len(book_list)==0):
-                return HttpResponse('NO PENDING BOOKS ')
+            accepted_list=models.Request.objects.filter(name=name,accept=True)
+            if len(accepted_list)!=0:
+                for book in accepted_list:
+                    mybook=models.Mybooks.objects.get_or_create(name=book.name,book=book.book,due=book.due)
+                book_list = models.Mybooks.objects.filter(name=name)
+                models.Request.objects.filter(name=name,accept=True).delete()
+
+            if (len(accepted_list)==0):
+                print('assdf')
+                return HttpResponse('NO ISSUED BOOKS ')
             else:
                 dict={
                     'mybooks':book_list,

@@ -23,16 +23,18 @@ class Request(models.Model):
     name=models.CharField(max_length=264)
     email_id=models.CharField(max_length=264)
     accept=models.BooleanField(default=False)
+    due=models.CharField(max_length=200,default='10 days')
     def __str__(self):
-        return self.name
+        return f'Name:{self.name}, Book:{ self.book}'
 
 class Mybooks(models.Model):
     name=models.CharField(max_length=264)
     book=models.CharField(max_length=264)
-    due=models.CharField(max_length=264)
+    due=models.CharField(max_length=264,default='10 days')
 
     def __str__(self):
-        return self.name
+        return f'Name:{self.name}, Book:{self.book}'
+
 
 class RenewalRequests(models.Model):
     name=models.CharField(max_length=264)
@@ -41,4 +43,4 @@ class RenewalRequests(models.Model):
     accept=models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return f'Name:{self.name}, Book:{self.book}'
