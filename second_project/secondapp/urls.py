@@ -15,5 +15,7 @@ urlpatterns=[
     path('book/<str:booktitle>',views.book,name='book'),
     path('book/request/',views.request_book,name='Borrow'),
     path('login/',views.login,name='login'),
-    path('mybooks<str:name>',views.mybooks,name='mybooks')
+    path('mybooks<str:name>',views.mybooks,name='mybooks'),
+    path('after_request<str:book>',views.after_request,name='after_request'),
+    path('renew/',views.renewal_form,name='renewalform')
 ]

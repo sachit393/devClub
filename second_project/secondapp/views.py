@@ -78,6 +78,7 @@ def book(request,booktitle):
 
 def request_book(request):
     form=modelforms.BorrowForm()
+
     if request.method == 'POST':
         form=modelforms.BorrowForm(request.POST)
         print(form)
@@ -109,6 +110,7 @@ def login(request):
     if request.method=='POST':
         form = forms.FormName(request.POST)
         if form.is_valid()==True:
+            form.accept=False
             dict = {
                 'form': form
             }
@@ -135,6 +137,30 @@ def mybooks(request,name):
                 return render(request,'secondapp/mybooks.html',dict)
 
     return HttpResponse('FIRST REGISTER YOURSELF')
+
+def after_request(request,book):
+    dict={
+        'book':book,
+    }
+    return render(request,'secondapp/after_request.html',dict)
+
+def renewal_form(request):
+    form=modelforms.RenewForm()
+    dict={
+        'form':form
+    }
+    if request.method=='POST':
+        form = modelforms.RenewForm(request.POST)
+
+        if form.is_valid()==True:
+            form.accept = False
+            form.save(commit=True)
+
+            dict = {
+                'form': form
+            }
+            return render(request,'secondapp/after_request.html',dict)
+    return render(request,'secondapp/Renewal_form.html',context=dict)
 # def form_name_view(request):
 #     form=forms.FormName()
 # #to check that somebody has actually posted /submittedsomething
