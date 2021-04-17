@@ -10,9 +10,10 @@
         <li>
             <h2>BOOK NAME: {{ book.book }}</h2>
             <h2>DUE DATE:{{ book.due }}</h2>
+            <a href="{% url 'secondapp:renewalform' %}"><input type="submit" value="Request Renew"></a>
+
         </li>
     {% endfor %}
-
 </ol>
 
 
