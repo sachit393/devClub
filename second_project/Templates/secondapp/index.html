@@ -50,8 +50,18 @@
         </li>
 
     </ul>
+    <h2>New arrivals</h2>
+    <ol>
+{% for book in newbooks %}
+        <li>Title: {{book.title}} Genre:{{book.genre}} Author: {{book.author}}</li>
+    {% endfor %}
+    </ol>
+
 </div>
 
+
+
 <h2>NOTE:To checkout your borrowed books and dues login with your credentials</h2>
+
 </body>
 </html>
