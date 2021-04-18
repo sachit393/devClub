@@ -5,8 +5,8 @@ from django.core import validators
 
 class FormName(forms.Form):
     name=forms.CharField(max_length=264)
-    email=forms.CharField(max_length=264)
 
+    password=forms.CharField(widget=forms.PasswordInput)
     #clean data for entire form
 
 # custom validators using validators class

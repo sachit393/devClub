@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Book(models.Model):
+
     title=models.CharField(max_length=264)
     author=models.CharField(max_length=264)
     publisher=models.CharField(max_length=264)
@@ -14,6 +15,7 @@ class Book(models.Model):
 class User(models.Model):
     name=models.CharField(max_length=264)
     email_id=models.CharField(max_length=300)
+    password=models.CharField(max_length=200,default='library')
     def __str__(self):
         return self.name
 
@@ -61,3 +63,12 @@ class Warnings(models.Model):
     warning=models.TextField(max_length=3000)
     def __str__(self):
         return f'Name:{self.name}'
+
+class NewArrivals(models.Model):
+    title=models.ForeignKey(Book,on_delete=models.CASCADE,name='title')
+    author=models.CharField(max_length=264,default='')
+    publisher=models.CharField(max_length=264,default='')
+    genre=models.CharField(max_length=264,default='')
+    summary=models.CharField(max_length=264,default='')
+    def __str__(self):
+        return f'Title:{self.title}'

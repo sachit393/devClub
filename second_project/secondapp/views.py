@@ -1,17 +1,21 @@
 from django.shortcuts import render
 from . import forms
 from django.http import HttpResponse
-
+from django.contrib.auth.hashers import make_password
 from . import modelforms
 from . import  models
+
 from django.core import validators
 
 # Create your views here.
 
 
 def index(request):
-
-    return render(request,'secondapp/index.html')
+    new_books=models.NewArrivals.objects.all()
+    dict={
+        'newbooks':new_books
+    }
+    return render(request,'secondapp/index.html',dict)
 
 def registrationform(request):
     form=modelforms.ModelForm()
@@ -21,8 +25,9 @@ def registrationform(request):
         if form.is_valid():
                 #do something after receiving data
                 print("validation success")
-                form.save(commit=True)
 
+
+                form.save(commit=True)
                 return index(request)
 
 
@@ -86,10 +91,9 @@ def request_book(request):
 
     if request.method == 'POST':
         form=modelforms.BorrowForm(request.POST)
-        print(form)
+
         namelist=models.User.objects.all()
-        print(namelist[1].name)
-        print(form.cleaned_data['name'])
+
         if form.is_valid():
 
             for user in namelist:
@@ -98,6 +102,7 @@ def request_book(request):
                             #do something after receiving data
                             # print("validation success")
                             return after_request(request,'book')
+            return HttpResponse('<h1>Register Yourself First</h1>')
 
 
 
@@ -120,39 +125,43 @@ def login(request):
                 'form': form
             }
             name=form.cleaned_data['name']
-            print('afa')
-            return mybooks(request,name)
-        print('fdaff')
+            password=form.cleaned_data['password']
+
+            return mybooks(request,name,password)
+
 
     return render(request, 'secondapp/login.html',dict)
 
-def mybooks(request,name):
+def mybooks(request,name,password):
     namelist = models.User.objects.all()
-    print(namelist)
-    for user in namelist:
 
+    for user in namelist:
         if user.name==name:
-            accepted_list=models.Request.objects.filter(name=name,accept=True)
-            accepted_renew_list=models.RenewalRequests.objects.filter(name=name,accept=True)
-            if len(accepted_list)!=0 or len(accepted_renew_list):
-                for book in accepted_list:
-                    mybook=models.Mybooks.objects.get_or_create(name=book.name,book=book.book,due=book.due)
-                book_list = models.Mybooks.objects.filter(name=name)
-                models.Request.objects.filter(name=name,accept=True).delete()
-                for book in accepted_renew_list:
-                    mybook = models.Mybooks.objects.get_or_create(name=book.name, book=book.book, due=book.renewal_time)
-                book_list = models.Mybooks.objects.filter(name=name)
-                models.RenewalRequests.objects.filter(name=name, accept=True).delete()
-            if (len(accepted_list)==0 and len(accepted_renew_list)==0):
-                print('assdf')
-                book_list = models.Mybooks.objects.filter(name=name)
-                if(len(book_list)==0):
-                    return HttpResponse('NO ISSUED BOOKS ')
-                dict={
-                    'mybooks':book_list,
-                    'name':name,
-                }
-                return render(request,'secondapp/mybooks.html',dict)
+            print(user.password)
+            if user.password==password:
+                accepted_list=models.Request.objects.filter(name=name,accept=True)
+                accepted_renew_list=models.RenewalRequests.objects.filter(name=name,accept=True)
+                if len(accepted_list)!=0 or len(accepted_renew_list):
+                    for book in accepted_list:
+                        mybook=models.Mybooks.objects.get_or_create(name=book.name,book=book.book,due=book.due)
+                    book_list = models.Mybooks.objects.filter(name=name)
+                    models.Request.objects.filter(name=name,accept=True).delete()
+                    for book in accepted_renew_list:
+                        mybook = models.Mybooks.objects.get_or_create(name=book.name, book=book.book, due=book.renewal_time)
+                    book_list = models.Mybooks.objects.filter(name=name)
+                    models.RenewalRequests.objects.filter(name=name, accept=True).delete()
+                if (len(accepted_list)==0 and len(accepted_renew_list)==0):
+
+                    book_list = models.Mybooks.objects.filter(name=name)
+                    if(len(book_list)==0):
+                        return HttpResponse('NO ISSUED BOOKS ')
+                    dict={
+                        'mybooks':book_list,
+                        'name':name,
+                    }
+                    return render(request,'secondapp/mybooks.html',dict)
+            else:
+                return HttpResponse('INVALID PASSWORD')
 
     return HttpResponse('FIRST REGISTER YOURSELF')
 
