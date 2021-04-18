@@ -1,5 +1,5 @@
 from django import forms
-from .models import User,Request,RenewalRequests
+from .models import User,Request,RenewalRequests,Ratings
 class ModelForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
@@ -24,3 +24,8 @@ class RenewForm(forms.ModelForm):
         model=RenewalRequests
         fields= ['name','book','renewal_time','accept']
 
+class RatingForm(forms.ModelForm):
+    comments=forms.CharField(required=False)
+    class Meta:
+        model = Ratings
+        fields='__all__'

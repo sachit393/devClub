@@ -17,5 +17,8 @@ urlpatterns=[
     path('login/',views.login,name='login'),
     path('mybooks<str:name>',views.mybooks,name='mybooks'),
     path('after_request<str:book>',views.after_request,name='after_request'),
-    path('renew/',views.renewal_form,name='renewalform')
+    path('renew/',views.renewal_form,name='renewalform'),
+    path('rating/<str:book>',views.rating,name='rating'),
+    path('messages/<str:name>',views.messages,name='messages')
+
 ]

@@ -148,10 +148,9 @@ def mybooks(request,name):
                 book_list = models.Mybooks.objects.filter(name=name)
                 if(len(book_list)==0):
                     return HttpResponse('NO ISSUED BOOKS ')
-
-
                 dict={
                     'mybooks':book_list,
+                    'name':name,
                 }
                 return render(request,'secondapp/mybooks.html',dict)
 
@@ -180,6 +179,32 @@ def renewal_form(request):
             }
             return render(request,'secondapp/after_request.html',dict)
     return render(request,'secondapp/Renewal_form.html',context=dict)
+
+def rating(request,book):
+    form=modelforms.RatingForm()
+    dict={
+        'form':form
+    }
+    if request.method=='POST':
+        form=modelforms.RatingForm(request.POST)
+
+        if form.is_valid()==True:
+            form.save(commit=True)
+            dict={
+                'form':form
+            }
+            return render(request,'secondapp/index.html',context=dict)
+    return render(request,'secondapp/rating.html',context=dict)
+
+def messages(request,name):
+    messages=models.Warnings.objects.filter(name=name)
+    if len(messages)==0:
+        return HttpResponse('No messages from Librarian')
+    dict={
+        'messages':messages
+    }
+    return render(request,'secondapp/messages.html',context=dict)
+
 # def form_name_view(request):
 #     form=forms.FormName()
 # #to check that somebody has actually posted /submittedsomething

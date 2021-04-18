@@ -46,3 +46,18 @@ class RenewalRequests(models.Model):
 
     def __str__(self):
         return f'Name:{self.name}, Book:{self.book}'
+
+class Ratings(models.Model):
+    name=models.CharField(max_length=264)
+    book=models.CharField(max_length=264)
+    comments=models.CharField(max_length=3000,default='')
+    SCORE_CHOICES = zip(range(1, 6), range(1, 6))
+    stars = models.IntegerField(choices=SCORE_CHOICES, default=3)
+    def __str__(self):
+        return f'Name:{self.name}, Book:{self.book},Stars:{self.stars}'
+    
+class Warnings(models.Model):
+    name=models.CharField(max_length=264)
+    warning=models.TextField(max_length=3000)
+    def __str__(self):
+        return f'Name:{self.name}'
