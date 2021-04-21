@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from . import forms
+from django.contrib.auth.hashers import check_password
+
 from django.http import HttpResponse
 from django.contrib.auth.hashers import make_password
 from . import modelforms
@@ -20,9 +22,18 @@ def index(request):
 def registrationform(request):
     form=modelforms.ModelForm()
     if request.method == 'POST':
-        form=modelforms.ModelForm(request.POST)
+        form = modelforms.ModelForm(request.POST)
 
+        # check_password()
         if form.is_valid():
+                request.GET = request.GET.copy()
+                request.GET['name'] = form.cleaned_data['name']
+                request.GET['email_id']=form.cleaned_data['email_id']
+                request.GET['password']=make_password(form.cleaned_data['password'])
+                # print(request.GET['password'])
+                print(check_password('blahblah',request.GET['password']))
+                form = modelforms.ModelForm(request.GET)
+
                 #do something after receiving data
                 print("validation success")
 
@@ -98,10 +109,23 @@ def request_book(request):
 
             for user in namelist:
                 if user.name==form.cleaned_data['name']:
+
+                    if check_password(form.cleaned_data['password'],user.password):
+                            request.GET = request.GET.copy()
+                            request.GET['name'] = form.cleaned_data['name']
+                            request.GET['email_id'] = form.cleaned_data['email_id']
+                            request.GET['password'] = make_password(form.cleaned_data['password'])
+                            request.GET['book'] =form.cleaned_data['book']
+
+                            # print(request.GET['password'])
+                            print(check_password('blahblah', request.GET['password']))
+                            form = modelforms.BorrowForm(request.GET)
                             form.save(commit=True)
                             #do something after receiving data
                             # print("validation success")
                             return after_request(request,'book')
+                    else:
+                        return HttpResponse("<h1>INVALID PASSWORD</h1>")
             return HttpResponse('<h1>Register Yourself First</h1>')
 
 
@@ -138,7 +162,7 @@ def mybooks(request,name,password):
     for user in namelist:
         if user.name==name:
             print(user.password)
-            if user.password==password:
+            if check_password(password,user.password):
                 accepted_list=models.Request.objects.filter(name=name,accept=True)
                 accepted_renew_list=models.RenewalRequests.objects.filter(name=name,accept=True)
                 if len(accepted_list)!=0 or len(accepted_renew_list):
